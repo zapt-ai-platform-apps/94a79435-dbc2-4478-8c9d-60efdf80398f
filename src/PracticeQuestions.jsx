@@ -26,7 +26,7 @@ export default function PracticeQuestions() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-full p-4">
+        <div className="flex flex-col items-center justify-start h-full p-4 pt-20">
             <h2 className="text-2xl font-semibold mb-4">Practice Questions</h2>
             <button 
                 onClick={handleGenerate}

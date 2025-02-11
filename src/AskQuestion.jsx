@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/browser';
 import { askQuestionAPI } from './api';
+import { playAnswer } from './speech';
 
 export default function AskQuestion() {
     const [question, setQuestion] = useState('');
@@ -21,13 +22,7 @@ export default function AskQuestion() {
             setResponse(res);
             const savedAnswers = JSON.parse(localStorage.getItem('savedAnswers') || '[]');
             localStorage.setItem('savedAnswers', JSON.stringify([...savedAnswers, res]));
-
-            const utterance = new SpeechSynthesisUtterance(res.answer);
-            const selectedVoice = speechSynthesis.getVoices().find(v => v.name.toLowerCase().includes(voice));
-            if (selectedVoice) {
-                utterance.voice = selectedVoice;
-            }
-            speechSynthesis.speak(utterance);
+            playAnswer(res.answer, voice);
             console.log("Completed API call and read out answer.");
         } catch (error) {
             console.error("Error occurred while asking question:", error);
@@ -45,7 +40,7 @@ export default function AskQuestion() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-full p-4">
+        <div className="flex flex-col items-center justify-start h-full p-4 pt-20">
             <h2 className="text-2xl font-semibold mb-4">Ask a Question</h2>
             <textarea
                 className="box-border p-2 mb-4 w-full max-w-md bg-gray-800 text-white border border-gray-700 rounded"
