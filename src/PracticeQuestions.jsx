@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import * as Sentry from '@sentry/browser';
+import { generatePracticeQuestions } from './api/generatePracticeQuestions';
+import QuestionItem from './components/QuestionItem';
 
 export default function PracticeQuestions() {
     const [questions, setQuestions] = useState([]);
@@ -9,11 +11,7 @@ export default function PracticeQuestions() {
         setLoading(true);
         console.log("Generating practice questions...");
         try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            const generated = [
-                { id: 1, question: "What is 2+2?" },
-                { id: 2, question: "Explain the water cycle." },
-            ];
+            const generated = await generatePracticeQuestions();
             setQuestions(generated);
             console.log("Practice questions generated:", generated);
         } catch (error) {
@@ -23,6 +21,24 @@ export default function PracticeQuestions() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleUserAnswerChange = (id, value) => {
+        setQuestions(prevQuestions =>
+            prevQuestions.map(q => (q.id === id ? { ...q, userAnswer: value } : q))
+        );
+    };
+
+    const checkAnswer = (id) => {
+        setQuestions(prevQuestions =>
+            prevQuestions.map(q => {
+                if (q.id === id) {
+                    const isCorrect = Number(q.userAnswer) === q.correctAnswer;
+                    return { ...q, isCorrect };
+                }
+                return q;
+            })
+        );
     };
 
     return (
@@ -37,9 +53,12 @@ export default function PracticeQuestions() {
             </button>
             <ul className="w-full max-w-md">
                 {questions.map(q => (
-                    <li key={q.id} className="p-2 bg-gray-800 rounded mb-2">
-                        {q.question}
-                    </li>
+                    <QuestionItem 
+                        key={q.id} 
+                        question={q} 
+                        onUserAnswerChange={handleUserAnswerChange} 
+                        onCheckAnswer={checkAnswer} 
+                    />
                 ))}
             </ul>
         </div>

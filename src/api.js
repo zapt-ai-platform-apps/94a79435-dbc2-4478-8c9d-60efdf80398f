@@ -1,7 +1,10 @@
 export async function askQuestionAPI({ question, image, voice }) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return {
-        answer: `This is the answer for: ${question}`,
-        explanation: 'This is the explanation for your question.'
-    };
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({
+                answer: `This is the answer for: ${question || 'an image question'}`,
+                explanation: `Explanation generated using the ${voice} voice.`,
+            });
+        }, 1000);
+    });
 }

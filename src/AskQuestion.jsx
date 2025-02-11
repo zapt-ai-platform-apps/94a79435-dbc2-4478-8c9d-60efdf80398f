@@ -80,7 +80,7 @@ export default function AskQuestion() {
                 <div className="mt-6 p-4 bg-gray-800 rounded max-w-md">
                     <h3 className="font-bold mb-2">Answer</h3>
                     <p>{response.answer}</p>
-                    <h4 className="font-semibold mt-4">Explanation</h4>
+                    <h4 className="font-semibold mt-4">Working</h4>
                     <p>{response.explanation}</p>
                 </div>
             )}
